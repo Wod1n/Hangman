@@ -13,7 +13,6 @@ def new_word():
     word_choice = list(word_list[index])
     #Take these out
     print(word_choice)
-    print(len(word_choice))
 
     return word_choice
 
@@ -29,9 +28,13 @@ def hangman_game():
     while lives > 0:
         correct_letters = len(word_choice)
         print("".join(partial_solution))
+        print("-----------------------------")
         guess = input("Please enter your next guess: ")
+        while guess == "":
+            guess = input("Please make an input: ")
 
         parsed_guess = guess[0].lower()
+
         if parsed_guess in set(word_choice):
             print("Correct!")
             for i in range(len(word_choice)):
@@ -44,21 +47,24 @@ def hangman_game():
 
             print(correct_letters)
             if correct_letters == len(word_choice):
+                print ("")
+                print("-----------------------------")
                 print("You Win!")
-                print("The word was " + "".join(word_choice))
-                break
+                print("The word was: {}".format("".join(word_choice)))
+                return
 
         else:
             lives -= 1
             print("Incorrect guess")
-            print("You have {} lives remaining".format(lives))
+            if lives == 1:
+                print("You have 1 life remaining")
+            else:
+                print("You have {} lives remaining".format(lives))
 
-def main():
-    play_again = True
-    while play_again:
-        hangman_game()
-        response = input("Would you like to play again? Y/N   ")
-        if response == "n" or response == "N":
-            play_again = False
+        print("")
 
-main()
+    print("-----------------------------")
+    print("You Lose")
+    print("The word was: {}".format("".join(word_choice)))
+
+hangman_game()
