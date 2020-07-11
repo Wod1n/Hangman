@@ -2,25 +2,46 @@
 import random
 
 def new_word():
+
+    #import word list
     with open("./word_list.txt") as words:
         word_list = words.readlines()
 
+    #remove carriage returns
     for i in range(len(word_list)):
         word_list[i] = word_list[i].replace("\n","")
 
+    #select random word from list
     index = random.randrange(0, len(word_list), 1)
-
-    word_choice = list(word_list[index])
-    #Take these out
+    word_choice = word_list[index]
     print(word_choice)
 
     return word_choice
+
+def user_guess(guessed_letters):
+    print("-----------------------------")
+    guess = input("Please enter your next guess: ")
+    while True:
+        if guess in set(guessed_letters):
+            print("You have already guessed that letter!")
+            guess = input("Please enter your next guess: ")
+            continue
+
+        if guess != "" and guess.lower().islower():
+            parsed_guess = guess[0].lower()
+            return parsed_guess
+
+        print("Invalid input")
+        guess = input("Please enter your next guess: ")
+
+
 
 def hangman_game():
     word_choice = new_word()
     lives = 7
 
     partial_solution = []
+    guessed_letters = []
 
     for i in range(len(word_choice)):
         partial_solution.append("*")
@@ -28,13 +49,9 @@ def hangman_game():
     while lives > 0:
         correct_letters = len(word_choice)
         print("".join(partial_solution))
-        print("-----------------------------")
-        guess = input("Please enter your next guess: ")
-        while guess == "":
-            guess = input("Please make an input: ")
+        parsed_guess = user_guess(guessed_letters)
 
-        parsed_guess = guess[0].lower()
-
+        guessed_letters.append(parsed_guess)
         if parsed_guess in set(word_choice):
             print("Correct!")
             for i in range(len(word_choice)):
@@ -45,12 +62,11 @@ def hangman_game():
                 if partial_solution[i] == "*":
                     correct_letters -= 1
 
-            print(correct_letters)
             if correct_letters == len(word_choice):
-                print ("")
+                print("")
                 print("-----------------------------")
                 print("You Win!")
-                print("The word was: {}".format("".join(word_choice)))
+                print("The word was: {}".format(word_choice))
                 return
 
         else:
@@ -65,6 +81,6 @@ def hangman_game():
 
     print("-----------------------------")
     print("You Lose")
-    print("The word was: {}".format("".join(word_choice)))
+    print("The word was: {}".format(word_choice))
 
 hangman_game()
