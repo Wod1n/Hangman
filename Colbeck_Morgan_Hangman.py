@@ -22,14 +22,16 @@ def user_guess(guessed_letters):
     print("-----------------------------")
     guess = input("Please enter your next guess: ")
     while True:
-        if guess in set(guessed_letters):
-            print("You have already guessed that letter!")
-            guess = input("Please enter your next guess: ")
-            continue
-
         if guess != "" and guess.lower().islower():
-            parsed_guess = guess[0].lower()
-            return parsed_guess
+            for i in range(len(guess)):
+                if guess[i].islower():
+                    if guess[i] in set(guessed_letters):
+                        print("You have already guessed that letter!")
+                        guess = input("Please enter your next guess: ")
+                        break
+                    print(guess[i])
+                    return guess[i]
+            continue
 
         print("Invalid input")
         guess = input("Please enter your next guess: ")
